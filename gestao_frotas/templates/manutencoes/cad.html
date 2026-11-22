@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'Editar Manutenção' if manutencao else 'Registrar Manutenção' }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='menu.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='crud.css') }}">
+</head>
+<body>
+    {% include 'menuPage.html' %}
+
+    <div class="_baixo_body" style="padding: 2rem 0;">
+        <main class="login-card" style="width: min(92%, 520px);">
+            <h1>{{ 'Editar Manutenção #' ~ manutencao.id if manutencao else 'Nova Manutenção' }}</h1>
+            <p class="subtitle">Veículo: <strong>{{ veiculo.placa }}</strong> ({{ veiculo.marca }} {{ veiculo.modelo }})</p>
+
+            <form action="{{ url_for('salvar_manutencao') }}" method="post">
+                {% if manutencao %}
+                    <input type="hidden" name="id" value="{{ manutencao.id }}">
+                {% endif %}
+                <input type="hidden" name="id_veiculo" value="{{ veiculo.id }}">
+
+                <label for="data_manutencao">Data da Manutenção:</label>
+                <input type="date" id="data_manutencao" name="data_manutencao"
+                       value="{{ manutencao.data_manutencao.strftime('%Y-%m-%d') if manutencao else '' }}" required>
+
+                <label for="odometro_km">Odômetro (km):</label>
+                <input type="number" id="odometro_km" name="odometro_km" min="0"
+                       value="{{ manutencao.odometro_km if manutencao else '' }}" required>
+
+                <label for="tipo_manutencao">Tipo de Manutenção:</label>
+                <select id="tipo_manutencao" name="tipo_manutencao" style="width: 100%; padding: .85rem 1rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;">
+                    {% set tp = manutencao.tipo_manutencao if manutencao else 'Preventiva' %}
+                    <option value="Preventiva" {% if tp == 'Preventiva' %}selected{% endif %}>Preventiva</option>
+                    <option value="Corretiva" {% if tp == 'Corretiva' %}selected{% endif %}>Corretiva</option>
+                    <option value="Troca de Óleo" {% if tp == 'Troca de Óleo' %}selected{% endif %}>Troca de Óleo</option>
+                    <option value="Revisão Geral" {% if tp == 'Revisão Geral' %}selected{% endif %}>Revisão Geral</option>
+                </select>
+
+                <label for="custo">Custo (R$):</label>
+                <input type="number" id="custo" name="custo" step="0.01" min="0"
+                       value="{{ '%.2f'|format(manutencao.custo) if manutencao else '' }}" required>
+
+                <label for="descricao_servico">Descrição do Serviço:</label>
+                <textarea id="descricao_servico" name="descricao_servico" rows="4" required>{{ manutencao.descricao_servico if manutencao else '' }}</textarea>
+
+                <button type="submit">{{ 'Salvar Alterações' if manutencao else 'Registrar Manutenção' }}</button>
+            </form>
+
+            <a class="forgot" href="{{ url_for('detalhar_veiculo', id=veiculo.id) }}">Voltar ao prontuário</a>
+        </main>
+    </div>
+</body>
+</html>

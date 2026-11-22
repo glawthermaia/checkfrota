@@ -1,0 +1,71 @@
+.tabela-customizada {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    text-align: left;
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(11, 34, 64, 0.08);
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.tabela-customizada th,
+.tabela-customizada td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.tabela-customizada th {
+    background-color: #0b2240; /* Cabeçalho azul-marinho CheckFrota */
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.tabela-customizada tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+.tabela-customizada tbody tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+.mensagem-destaque {
+    padding: 16px 20px;
+    margin: 20px 0;
+    border-left: 6px solid #f9690e; /* Destaque lateral laranja CheckFrota */
+    background-color: #f8fafc;
+    color: #0b2240;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(11, 34, 64, 0.06);
+}
+
+.mensagem-destaque strong {
+    color: #0b2240;
+}
+
+.alerta {
+    padding: 15px 20px;
+    margin: 20px 0;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    border-radius: 6px;
+    background-color: #fff7ed;
+    color: #9a3412;
+    border: 1px solid #fed7aa;
+}
+
+.alerta strong {
+    font-weight: 700;
+}
+
+.alerta-info {
+    background-color: #e0f2fe;
+    color: #0b2240;
+    border: 1px solid #bae6fd;
+}

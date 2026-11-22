@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CheckFrota - Prontuário {{ veiculo.placa }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='menu.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='tabela.css') }}">
+</head>
+<body>
+    {% include 'menuPage.html' %}
+
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <h2 style="color: #0b2240;">Prontuário do Veículo: {{ veiculo.placa }} (#{{ veiculo.id }})</h2>
+            <div>
+                <a href="{{ url_for('pre_editar_veiculo', id=veiculo.id) }}" style="color: #0b2240; font-weight: bold;">Editar Dados</a> |
+                <a href="{{ url_for('lista_veiculos') }}" style="color: #0b2240;">Voltar à Frota</a>
+            </div>
+        </div>
+
+        {% if msg %}
+            <div class="alerta alerta-info"><strong>Aviso:</strong> {{ msg }}</div>
+        {% endif %}
+
+        <div class="mensagem-destaque">
+            <strong>Ativo:</strong> {{ veiculo.marca }} {{ veiculo.modelo }} ({{ veiculo.ano_fabricacao }}) &nbsp;|&nbsp;
+            <strong>Chassi:</strong> {{ veiculo.chassi }} &nbsp;|&nbsp;
+            <strong>Aquisição:</strong> {{ veiculo.data_aquisicao.strftime('%d/%m/%Y') }} &nbsp;|&nbsp;
+            <strong>Status:</strong> {{ veiculo.status }}<br><br>
+            <strong>Custo Acumulado em Manutenções:</strong> R$ {{ "%.2f"|format(veiculo.custo_total_manutencao) }}
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin: 1.5rem 0 1rem;">
+            <h3 style="color: #0b2240;">Histórico de Manutenções ({{ veiculo.manutencoes|length }})</h3>
+            <a href="/manutencoes/novo/{{ veiculo.id }}"
+               style="background: #f9690e; color: #fff; padding: 0.58rem 1.1rem; border-radius: 6px; text-decoration: none; font-weight: bold;">+ Registrar Manutenção</a>
+        </div>
+
+        <table class="tabela-customizada">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Odômetro (km)</th>
+                    <th>Tipo</th>
+                    <th>Descrição do Serviço</th>
+                    <th>Custo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in veiculo.manutencoes %}
+                <tr>
+                    <td>{{ m.data_manutencao.strftime('%d/%m/%Y') }}</td>
+                    <td>{{ "{:,}".format(m.odometro_km).replace(",", ".") }} km</td>
+                    <td><strong>{{ m.tipo_manutencao }}</strong></td>
+                    <td>{{ m.descricao_servico }}</td>
+                    <td>R$ {{ "%.2f"|format(m.custo) }}</td>
+                    <td>
+                        <a href="/manutencoes/editar/{{ m.id }}" style="color: #0b2240; font-weight: bold;">Editar</a> |
+                        <a href="/manutencoes/deletar/{{ m.id }}"
+                           style="color: #dc3545;"
+                           onclick="return confirm('Confirma a exclusão deste registro de manutenção?');">Excluir</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center;">Nenhuma manutenção registrada para este veículo.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if veiculo.status not in ['Inativo', 'Vendido'] %}
+        <div class="alerta" style="margin-top: 1.5rem;">
+            <strong>Desativação Segura (Preserva Histórico):</strong>
+            <a href="{{ url_for('desativar_veiculo', id=veiculo.id, status='Inativo') }}"
+               style="color: #9a3412; font-weight: bold;"
+               onclick="return confirm('Alterar status para Inativo?');">Marcar como Inativo</a> &nbsp;|&nbsp;
+            <a href="{{ url_for('desativar_veiculo', id=veiculo.id, status='Vendido') }}"
+               style="color: #9a3412; font-weight: bold;"
+               onclick="return confirm('Alterar status para Vendido?');">Marcar como Vendido</a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

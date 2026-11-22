@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Operador</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='crud.css') }}">
+</head>
+<body>
+    <div class="_baixo_body" style="padding: 2rem 0;">
+        <main class="login-card" style="width: min(92%, 440px);">
+            <h1>{{ 'Editar Operador' if usuario else 'Novo Operador' }}</h1>
+            <p class="subtitle">Dados de acesso ao Sistema de Gestão de Frotas</p>
+
+            <form action="{{ url_for('salvar_usuario') }}" method="post">
+                {% if usuario %}
+                    <input type="hidden" name="id" value="{{ usuario.id }}">
+                {% endif %}
+
+                <label for="nome">Nome Completo:</label>
+                <input type="text" id="nome" name="nome" value="{{ usuario.nome if usuario else '' }}" required>
+
+                <label for="usuario">E-mail / Login:</label>
+                <input type="text" id="usuario" name="usuario" value="{{ usuario.usuario if usuario else '' }}" required>
+
+                <label for="senha">Senha:</label>
+                <input type="password" id="senha" name="senha" {{ '' if usuario else 'required' }}>
+
+                <button type="submit">Salvar</button>
+            </form>
+
+            <a class="forgot" href="{{ url_for('login') }}">Voltar ao Login</a>
+        </main>
+    </div>
+</body>
+</html>

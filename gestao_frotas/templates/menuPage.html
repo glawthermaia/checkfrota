@@ -1,0 +1,13 @@
+<nav class="navbar">
+    <a href="/veiculos" class="brand">
+        <img src="{{ url_for('static', filename='checkFrota.jpg') }}" alt="CheckFrota" class="navbar-logo">
+        <span>CheckFrota</span>
+    </a>
+    <ul class="nav-links">
+        <li><a href="/veiculos">Veículos</a></li>
+        <li><a href="/veiculos/novo" class="btn-nav-destaque">+ Novo Veículo</a></li>
+        <li><a href="{{ url_for('lista_usuarios') }}">Operadores</a></li>
+        <li><a href="/apidocs" target="_blank">API Swagger</a></li>
+        <li><a href="{{ url_for('logout') }}" class="btn-sair">Sair ({{ current_user.nome.split()[0] }})</a></li>
+    </ul>
+</nav>

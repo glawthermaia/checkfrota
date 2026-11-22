@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CheckFrota - Operadores Cadastrados</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='menu.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='tabela.css') }}">
+</head>
+<body>
+    {% include 'menuPage.html' %}
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h2 style="color: #0b2240;">Operadores do Sistema</h2>
+            <a href="{{ url_for('cadastro_usuario') }}" style="background: #f9690e; color: #fff; padding: 0.58rem 1.1rem; border-radius: 6px; text-decoration: none; font-weight: bold;">+ Novo Operador</a>
+        </div>
+        <table class="tabela-customizada">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Usuário / E-mail</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in usuarios %}
+                <tr>
+                    <td>{{ u.id }}</td>
+                    <td>{{ u.nome }}</td>
+                    <td>{{ u.usuario }}</td>
+                    <td>
+                        <a href="{{ url_for('pre_editar_usuario', id=u.id) }}" style="color: #0b2240; font-weight: bold;">Editar</a> |
+                        <a href="{{ url_for('deletar_usuario', id=u.id) }}" style="color: #dc3545;" onclick="return confirm('Excluir operador?');">Excluir</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

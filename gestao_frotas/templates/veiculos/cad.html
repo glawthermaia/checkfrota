@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'Editar Veículo' if veiculo else 'Cadastrar Veículo' }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='menu.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='crud.css') }}">
+</head>
+<body>
+    {% include 'menuPage.html' %}
+
+    <div class="_baixo_body" style="padding: 2rem 0;">
+        <main class="login-card" style="width: min(92%, 520px);">
+            <h1>{{ 'Editar Veículo #' ~ veiculo.id if veiculo else 'Novo Veículo' }}</h1>
+            <p class="subtitle">Dados cadastrais do ativo da frota</p>
+
+            <form action="{{ url_for('salvar_veiculo') }}" method="post">
+                {% if veiculo %}
+                    <input type="hidden" name="id" value="{{ veiculo.id }}">
+                {% endif %}
+
+                <label for="placa">Placa:</label>
+                <input type="text" id="placa" name="placa" maxlength="10"
+                       value="{{ veiculo.placa if veiculo else '' }}" required>
+
+                <label for="marca">Marca:</label>
+                <input type="text" id="marca" name="marca"
+                       value="{{ veiculo.marca if veiculo else '' }}" required>
+
+                <label for="modelo">Modelo:</label>
+                <input type="text" id="modelo" name="modelo"
+                       value="{{ veiculo.modelo if veiculo else '' }}" required>
+
+                <label for="ano_fabricacao">Ano de Fabricação:</label>
+                <input type="number" id="ano_fabricacao" name="ano_fabricacao" min="1950" max="2030"
+                       value="{{ veiculo.ano_fabricacao if veiculo else '2024' }}" required>
+
+                <label for="chassi">Chassi:</label>
+                <input type="text" id="chassi" name="chassi" maxlength="30"
+                       value="{{ veiculo.chassi if veiculo else '' }}" required>
+
+                <label for="data_aquisicao">Data de Aquisição:</label>
+                <input type="date" id="data_aquisicao" name="data_aquisicao"
+                       value="{{ veiculo.data_aquisicao.strftime('%Y-%m-%d') if veiculo else '' }}" required>
+
+                <label for="status">Status:</label>
+                <select id="status" name="status" style="width: 100%; padding: .85rem 1rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;">
+                    {% set st = veiculo.status if veiculo else 'Ativo' %}
+                    <option value="Ativo" {% if st == 'Ativo' %}selected{% endif %}>Ativo</option>
+                    <option value="Em Manutenção" {% if st == 'Em Manutenção' %}selected{% endif %}>Em Manutenção</option>
+                    <option value="Inativo" {% if st == 'Inativo' %}selected{% endif %}>Inativo</option>
+                    <option value="Vendido" {% if st == 'Vendido' %}selected{% endif %}>Vendido</option>
+                </select>
+
+                <button type="submit">{{ 'Salvar Alterações' if veiculo else 'Cadastrar Veículo' }}</button>
+            </form>
+
+            <a class="forgot" href="{{ url_for('lista_veiculos') }}">Voltar para a lista</a>
+        </main>
+    </div>
+</body>
+</html>

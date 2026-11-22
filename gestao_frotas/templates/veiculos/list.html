@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CheckFrota - Controle de Veículos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='menu.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='tabela.css') }}">
+</head>
+<body>
+    {% include 'menuPage.html' %}
+
+    <div class="container">
+        <h2 style="color: #0b2240; margin-bottom: 1rem;">Controle de Veículos da Frota</h2>
+
+        {% if msg %}
+            <div class="alerta alerta-info"><strong>Aviso:</strong> {{ msg }}</div>
+        {% endif %}
+
+        <!-- Consulta Rápida por Placa ou ID -->
+        <form action="{{ url_for('buscar_veiculo') }}" method="get" style="display: flex; gap: 0.5rem; margin-bottom: 1rem; align-items: center;">
+            <input type="text" name="termo" placeholder="Buscar por Placa ou ID (ex: PMB4A12 ou 1)" style="max-width: 340px;">
+            <input type="submit" value="Consultar Ativo">
+            <a href="{{ url_for('cadastro_veiculo') }}" style="margin-left: auto; background: #f9690e; color: #fff; padding: 0.58rem 1.1rem; border-radius: 6px; text-decoration: none; font-weight: bold;">+ Novo Veículo</a>
+        </form>
+
+        <!-- Filtros por Status, Marca e Modelo -->
+        <form action="{{ url_for('lista_veiculos') }}" method="get" style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; background: #f8fafc; padding: 0.8rem; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 1.2rem;">
+            <select name="status" style="padding: 0.55rem; border: 1px solid #cbd5e1; border-radius: 6px;">
+                <option value="">Todos os Status</option>
+                <option value="Ativo" {% if filtro_status == 'Ativo' %}selected{% endif %}>Ativo</option>
+                <option value="Em Manutenção" {% if filtro_status == 'Em Manutenção' %}selected{% endif %}>Em Manutenção</option>
+                <option value="Inativo" {% if filtro_status == 'Inativo' %}selected{% endif %}>Inativo</option>
+                <option value="Vendido" {% if filtro_status == 'Vendido' %}selected{% endif %}>Vendido</option>
+            </select>
+            <input type="text" name="marca" value="{{ filtro_marca }}" placeholder="Filtrar por Marca" style="max-width: 200px;">
+            <input type="text" name="modelo" value="{{ filtro_modelo }}" placeholder="Filtrar por Modelo" style="max-width: 200px;">
+            <input type="submit" value="Filtrar">
+            <a href="{{ url_for('lista_veiculos') }}" style="color: #475569; text-decoration: none; font-size: 14px; font-weight: bold;">Limpar</a>
+        </form>
+
+        <table class="tabela-customizada">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Placa</th>
+                    <th>Marca / Modelo</th>
+                    <th>Ano</th>
+                    <th>Status</th>
+                    <th>Manutenções</th>
+                    <th>Custo Total</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for v in veiculos %}
+                <tr>
+                    <td>{{ v.id }}</td>
+                    <td><strong>{{ v.placa }}</strong></td>
+                    <td>{{ v.marca }} {{ v.modelo }}</td>
+                    <td>{{ v.ano_fabricacao }}</td>
+                    <td>{{ v.status }}</td>
+                    <td>{{ v.manutencoes|length }}</td>
+                    <td>R$ {{ "%.2f"|format(v.custo_total_manutencao) }}</td>
+                    <td>
+                        <a href="{{ url_for('detalhar_veiculo', id=v.id) }}" style="color: #0b2240; font-weight: bold;">Prontuário</a> |
+                        <a href="{{ url_for('pre_editar_veiculo', id=v.id) }}" style="color: #0b2240;">Editar</a>
+                        {% if v.status not in ['Inativo', 'Vendido'] %}
+                            | <a href="{{ url_for('desativar_veiculo', id=v.id, status='Inativo') }}"
+                                 style="color: #dc3545;"
+                                 onclick="return confirm('Desativar veículo {{ v.placa }}? O histórico será preservado.');">Inativar</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" style="text-align: center;">Nenhum veículo encontrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

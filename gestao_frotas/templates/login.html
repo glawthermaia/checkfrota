@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CheckFrota - Acesso ao Portal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='principal.css') }}">
+</head>
+<body>
+    <main class="login-card">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='checkFrota.jpg') }}" alt="Logo CheckFrota" class="logo-img">
+        </div>
+
+        <h1>Acesso ao Portal</h1>
+        <p class="subtitle">Entre com suas credenciais corporativas</p>
+
+        {% if msg %}
+            <p class="erro-msg">{{ msg }}</p>
+        {% endif %}
+
+        <form action="{{ url_for('login') }}" method="post">
+            <label for="usuario">E-mail corporativo:</label>
+            <input type="text" id="usuario" name="usuario" placeholder="usuario@empresa.com.br" required>
+
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" placeholder="••••••••••••" required>
+
+            <button type="submit">Entrar</button>
+        </form>
+
+        <a class="forgot" href="{{ url_for('cadastro_usuario') }}">Criar nova conta corporativa</a>
+    </main>
+</body>
+</html>
